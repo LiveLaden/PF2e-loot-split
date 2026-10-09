@@ -9,7 +9,8 @@
   },
   "authors": [
     {
-      "name": "GM"
+      "name": "LiveLaden",
+      "url": "https://github.com/LiveLaden"
     }
   ],
   "esmodules": [
@@ -35,7 +36,11 @@
     ]
   },
   "socket": true,
-  "url": "",
-  "manifest": "",
-  "download": ""
+  "url": "https://github.com/LiveLaden/foundryvtt-loot-split",
+  "manifest": "https://raw.githubusercontent.com/LiveLaden/foundryvtt-loot-split/main/module.json",
+  "download": "https://github.com/LiveLaden/foundryvtt-loot-split/releases/download/v1.31.0/loot-split.zip",
+  "readme": "README.md",
+  "changelog": "CHANGELOG.md",
+  "license": "LICENSE",
+  "bugs": "https://github.com/LiveLaden/foundryvtt-loot-split/issues"
 }

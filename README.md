@@ -4,6 +4,17 @@ Foundry VTT v14 + PF2e system module. Split the party stash fairly between playe
 
 See [CHANGELOG.md](CHANGELOG.md) for version history.
 
+## Installation
+
+In Foundry Setup → Modules → Install Module, paste the manifest URL:
+
+```text
+https://raw.githubusercontent.com/LiveLaden/foundryvtt-loot-split/main/module.json
+```
+
+Or [download the latest release](https://github.com/LiveLaden/foundryvtt-loot-split/releases)
+and extract it into your `Data/modules/` folder.
+
 ## Flow
 
 1. GM opens a **party sheet**, goes to the **Stash** tab, and clicks **Split Loot** (GM-only button at the top of the stash inventory).
