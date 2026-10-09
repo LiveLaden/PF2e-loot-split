@@ -36,11 +36,11 @@
     ]
   },
   "socket": true,
-  "url": "https://github.com/LiveLaden/foundryvtt-loot-split",
-  "manifest": "https://raw.githubusercontent.com/LiveLaden/foundryvtt-loot-split/main/module.json",
-  "download": "https://github.com/LiveLaden/foundryvtt-loot-split/releases/download/v1.31.0/loot-split.zip",
+  "url": "https://github.com/LiveLaden/PF2e-loot-split",
+  "manifest": "https://raw.githubusercontent.com/LiveLaden/PF2e-loot-split/main/module.json",
+  "download": "https://github.com/LiveLaden/PF2e-loot-split/releases/download/v1.31.0/loot-split.zip",
   "readme": "README.md",
   "changelog": "CHANGELOG.md",
   "license": "LICENSE",
-  "bugs": "https://github.com/LiveLaden/foundryvtt-loot-split/issues"
+  "bugs": "https://github.com/LiveLaden/PF2e-loot-split/issues"
 }

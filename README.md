@@ -9,10 +9,10 @@ See [CHANGELOG.md](CHANGELOG.md) for version history.
 In Foundry Setup → Modules → Install Module, paste the manifest URL:
 
 ```text
-https://raw.githubusercontent.com/LiveLaden/foundryvtt-loot-split/main/module.json
+https://raw.githubusercontent.com/LiveLaden/PF2e-loot-split/main/module.json
 ```
 
-Or [download the latest release](https://github.com/LiveLaden/foundryvtt-loot-split/releases)
+Or [download the latest release](https://github.com/LiveLaden/PF2e-loot-split/releases)
 and extract it into your `Data/modules/` folder.
 
 ## Screenshots
