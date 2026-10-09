@@ -15,6 +15,16 @@ https://raw.githubusercontent.com/LiveLaden/foundryvtt-loot-split/main/module.js
 Or [download the latest release](https://github.com/LiveLaden/foundryvtt-loot-split/releases)
 and extract it into your `Data/modules/` folder.
 
+## Screenshots
+
+GM view (party stash, full draft window with management column):
+
+![Loot Split GM view](assets/screenshot-gm.png)
+
+Player view (claims, roll-offs, balances):
+
+![Loot Split player view](assets/screenshot-player.png)
+
 ## Flow
 
 1. GM opens a **party sheet**, goes to the **Stash** tab, and clicks **Split Loot** (GM-only button at the top of the stash inventory).
