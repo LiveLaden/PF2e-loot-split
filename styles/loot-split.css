@@ -1,0 +1,298 @@
+/* Loot Split — dark mode draft window (frameless, custom title bar) */
+
+/* Hide the native Foundry header AND frame: our own UI fills the whole window.
+   Opaque background on the app element itself so no theme/canvas sliver can
+   show through at the edges on any client. */
+#loot-split .window-header { display: none; }
+#loot-split.application,
+#loot-split.window-app {
+  background: #14161b !important;
+  border: 1px solid #2e333e !important;
+  outline: none !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+#loot-split .window-content {
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  border-radius: 12px !important;
+  background: #14161b !important;
+  overflow: hidden !important;
+}
+/* Some themes wrap content in an extra frame element — neutralize it too. */
+#loot-split .window-frame {
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: #14161b !important;
+  gap: 0 !important;
+}
+
+.loot-split-window .ls-root {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  height: 100%;
+  background: #14161b;
+  color: #e6e1d3;
+  font-size: 13px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* ---- custom title bar (draggable) ---- */
+.ls-titlebar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: linear-gradient(180deg, #262b36, #1a1e26);
+  border-bottom: 1px solid #363c49;
+  cursor: grab;
+  user-select: none;
+  flex: 0 0 auto;
+}
+.ls-titlebar:active { cursor: grabbing; }
+.ls-title-icon { color: #e8c15a; font-size: 18px; }
+.ls-title-text { font-size: 15px; font-weight: bold; letter-spacing: 0.4px; white-space: nowrap; }
+.ls-menu-wrap { display: flex; align-items: center; gap: 4px; position: relative; margin-left: auto; }
+.ls-icon-btn {
+  background: transparent; border: 1px solid transparent; border-radius: 6px;
+  color: #cfd4de; font-size: 15px; padding: 4px 9px; cursor: pointer; line-height: 1;
+}
+.ls-icon-btn:hover { background: #2c313d; border-color: #3d4352; }
+.ls-icon-btn.ls-close:hover { background: #7a1f1f; border-color: #7a1f1f; color: #fff; }
+
+/* ---- stat cards ---- */
+.ls-stats {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px;
+  padding: 10px 12px 4px; flex: 0 0 auto;
+}
+.ls-stat {
+  background: #1d2129; border: 1px solid #2e333e; border-radius: 8px;
+  padding: 7px 10px; display: flex; flex-direction: column;
+}
+.ls-stat label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.6px; color: #9aa0ae; }
+.ls-stat strong { font-size: 16px; color: #f0e6d2; }
+.ls-share { color: #8fd694 !important; }
+
+/* ---- two-column body: players left, loot right ---- */
+.ls-body {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 8px 12px; overflow: hidden; flex: 1 1 auto; min-height: 0;
+}
+.ls-members {
+  flex: 0 0 240px; max-height: 100%; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 6px;
+  padding-right: 2px;
+}
+.ls-members h3, .ls-items h3, .ls-gmcol h3 {
+  margin: 0; font-size: 12px; text-transform: uppercase;
+  letter-spacing: 0.7px; color: #9aa0ae;
+}
+.ls-items h3 { margin-bottom: 7px; }
+.ls-member {
+  display: flex; gap: 8px; align-items: center;
+  background: #1d2129; border: 1px solid #2e333e; border-radius: 8px;
+  padding: 5px 8px;
+}
+/* Framed, slightly zoomed portraits: hides baked token surround, keeps shape. */
+.ls-portrait { width: 60px; height: 60px; border-radius: 8px; overflow: hidden; flex: 0 0 auto; }
+.ls-portrait img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ls-member-info { display: flex; flex-direction: column; line-height: 1.35; min-width: 0; }
+.ls-member-name { font-weight: bold; color: #f0e6d2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ls-member-name em { color: #7fb4ff; font-style: normal; font-weight: normal; }
+.ls-member-claimed { font-size: 12px; color: #b9c0cf; }
+.ls-balance { font-size: 12px; font-weight: bold; }
+.ls-left { color: #8fd694; }
+.ls-owes { color: #ff9d94; }
+.ls-me { border-color: #4c8dff; box-shadow: 0 0 0 1px #4c8dff inset; }
+.ls-member.ls-excluded { opacity: 0.5; filter: grayscale(0.9); }
+.ls-excluded-tag { font-size: 12px; color: #9aa0ae; font-style: italic; }
+.ls-excl { margin-left: auto; flex: 0 0 auto; display: inline-flex; cursor: pointer; position: relative; }
+.ls-excl input[type="checkbox"] {
+  position: absolute; opacity: 0; width: 0; height: 0; margin: 0; padding: 0;
+}
+.ls-toggle {
+  width: 22px; height: 12px; border-radius: 7px; flex: 0 0 auto;
+  background: #101216; border: 1px solid #4a5160; position: relative;
+  transition: background 0.22s ease, border-color 0.22s ease;
+}
+.ls-toggle::after {
+  content: ""; position: absolute; top: 1px; left: 1px;
+  width: 8px; height: 8px; border-radius: 50%; background: #e8c15a;
+  transform: translateX(10px);
+  transition: transform 0.22s ease, background 0.22s ease;
+}
+.ls-excl input[type="checkbox"]:checked + .ls-toggle { background: #101216; border-color: #4a5160; }
+.ls-excl input[type="checkbox"]:checked + .ls-toggle::after { transform: none; background: #9aa0ae; }
+.ls-excl input[type="checkbox"]:focus-visible + .ls-toggle { outline: 1px solid #4c8dff; }
+
+.ls-items { flex: 1 1 auto; min-width: 0; max-height: 100%; overflow-y: auto; padding-right: 2px; }
+.ls-count { color: #9aa0ae; font-weight: normal; text-transform: none; letter-spacing: 0; }
+.ls-items-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; align-items: start; }
+.ls-items-grid .ls-fixed { grid-column: 1 / -1; }
+.ls-item {
+  --ls-rarity: #a8a49a;
+  display: flex; gap: 8px;
+  background: #1d2129; border: 1px solid #2e333e; border-radius: 8px;
+  padding: 5px 8px;
+  position: relative; overflow: hidden;
+}
+.ls-item.r-uncommon { --ls-rarity: #d08a63; }
+.ls-item.r-rare { --ls-rarity: #6ea8fe; }
+.ls-item.r-unique { --ls-rarity: #c58af9; }
+.ls-item:is(.r-common, .r-uncommon, .r-rare, .r-unique) { border-color: var(--ls-rarity); }
+.ls-item:is(.r-common, .r-uncommon, .r-rare, .r-unique) .ls-item-name { color: var(--ls-rarity); }
+.ls-winner-bg {
+  position: absolute; top: 70%; left: 50%; width: 520px; max-width: none;
+  transform: translate(-50%, -50%);
+  filter: saturate(0.55);
+  z-index: 0; pointer-events: none;
+}
+.ls-item.awarded::after {
+  content: ""; position: absolute; inset: 0;
+  background: rgba(18, 20, 25, 0.72);
+  pointer-events: none;
+}
+.ls-item.awarded .ls-item-main, .ls-item.awarded .ls-item-img { position: relative; z-index: 1; }
+.ls-item.awarded .ls-item-img { display: none; }
+.ls-item.rolloff { border-color: #c77b29; box-shadow: 0 0 0 1px #c77b29 inset; }
+.ls-item-img { width: 36px; height: 36px; border-radius: 6px; cursor: pointer; object-fit: cover; border: 1px solid #3d4352; flex: 0 0 auto; }
+.ls-item-main { flex: 1; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.ls-item-top { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; min-height: 20px; }
+.ls-item-name { font-weight: bold; color: #f0e6d2; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: auto; }
+.ls-item-name em { font-weight: normal; color: #9aa0ae; }
+.ls-item-value { font-weight: bold; color: #e8c15a; white-space: nowrap; }
+.ls-item-meta { display: flex; flex-wrap: nowrap; gap: 8px; font-size: 12px; color: #9aa0ae; min-height: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ls-rarity-tag {
+  font-size: 11px; text-transform: capitalize; white-space: nowrap;
+  color: var(--ls-rarity); border: 1px solid var(--ls-rarity); border-radius: 6px;
+  padding: 0 6px;
+}
+.ls-loc { color: #7fb4ff; }
+.ls-rollbadge { color: #ffcf6e; font-weight: bold; }
+.ls-item.ls-coin { border-style: dashed; }
+.ls-item.ls-fixed {
+  align-items: center;
+  border: none;
+  position: relative; overflow: hidden;
+  /* Optional artwork: drop a file at modules/loot-split/assets/coin-pile.webp
+     (.png/.jpg also work). Missing files simply don't paint. */
+  background-image: url("../assets/coin-pile.webp"), url("../assets/coin-pile.png"), url("../assets/coin-pile.jpg");
+  background-size: cover; background-position: center;
+  background-repeat: no-repeat;
+}
+.ls-fixed::after {
+  content: ""; position: absolute; inset: 0;
+  background: rgba(18, 20, 25, 0.75);
+  pointer-events: none;
+}
+.ls-fixed .ls-item-main, .ls-fixed .ls-coin-stack { position: relative; z-index: 1; }
+.ls-coin-stack { color: #e8c15a; font-size: 22px; flex: 0 0 auto; width: 44px; text-align: center; }
+.ls-denoms { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; font-weight: bold; }
+.ls-denom i { font-size: 10px; margin-right: 4px; }
+.ls-denom.d-gp { color: #e8c15a; }
+.ls-denom.d-sp { color: #c9ced6; }
+.ls-denom.d-cp { color: #d08a4e; }
+.ls-denom.d-pp { color: #f0f0f0; }
+.ls-winner { color: #8fd694; font-weight: bold; }
+
+.ls-claimants { display: flex; flex-wrap: nowrap; gap: 4px; align-items: center; min-height: 40px; overflow: hidden; }
+.ls-chip {
+  position: relative; display: inline-block;
+  width: 40px; height: 40px; border-radius: 6px;
+  background: transparent;
+  padding: 0; line-height: 0;
+  flex: 0 0 auto;
+}
+.ls-clip { display: block; width: 100%; height: 100%; border-radius: 5px; overflow: hidden; }
+.ls-clip img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ls-chip strong {
+  position: absolute; right: 0; bottom: 0;
+  background: #14161b; border: 1px solid #e8c15a; border-radius: 8px;
+  font-size: 11px; line-height: 1.4; padding: 0 4px; color: #ffd76a;
+}
+.ls-none { font-size: 12px; color: #6d7482; font-style: italic; }
+
+.ls-item-actions { display: flex; flex-wrap: nowrap; gap: 6px; margin-top: 1px; min-height: 30px; align-items: center; overflow: visible; }
+.ls-item-actions .ls-btn { padding: 3px 8px; font-size: 11px; white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; flex: 0 1 auto; }
+.ls-awarded-tag {
+  display: inline-block; font-size: 11px; font-weight: bold; color: #8fd694;
+  border: 1px solid #2e7d4f; border-radius: 6px; padding: 3px 8px; white-space: nowrap;
+}
+.ls-sold-tag {
+  display: inline-block; font-size: 11px; font-weight: bold; color: #e8c15a;
+  border: 1px solid #8a6d2f; border-radius: 6px; padding: 3px 8px; white-space: nowrap;
+}
+.ls-item.sold { opacity: 0.8; }
+
+.ls-btn {
+  background: #3b5a8f; color: #fff;
+  border: 1px solid #2c4469; border-radius: 6px;
+  padding: 4px 11px; font-size: 12px; cursor: pointer;
+}
+.ls-btn:hover { filter: brightness(1.18); }
+.ls-btn-ghost { background: transparent; color: #9fb6dd; border-color: #3b5a8f; }
+.ls-btn-roll { background: #8a5a12; border-color: #6e470d; }
+.ls-btn-gm { background: #5a3b6b; border-color: #463052; }
+
+.ls-log { font-size: 12px; color: #9aa0ae; }
+.ls-log-line { padding: 1px 0; }
+.ls-log-line.ls-dim { color: #6d7482; font-style: italic; }
+
+/* ---- GM right column ---- */
+.ls-gmcol {
+  flex: 0 0 210px; max-height: 100%; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.ls-gmcol .ls-btn { width: 100%; justify-content: flex-start; display: flex; align-items: center; gap: 8px; }
+.ls-gmcol h3:not(:first-child) { margin-top: 6px; }
+.ls-gmcol .ls-log {
+  background: #171a20; border: 1px solid #2e333e; border-radius: 8px;
+  padding: 7px 9px; max-height: 260px; overflow-y: auto;
+}
+.ls-btn-danger { background: #7a1f1f; border-color: #5f1818; color: #fff; }
+.ls-btn-danger:hover { filter: brightness(1.18); }
+
+.ls-warn {
+  background: #2a2416; color: #ffd76a;
+  border: 1px solid #5a4d1f; border-radius: 6px;
+  padding: 6px 10px; font-size: 12px;
+}
+
+/* Stash tab launch buttons (GM only, injected into party sheet) */
+.loot-split-launch { margin-bottom: 8px; display: flex; gap: 6px; }
+.loot-split-launch button {
+  background: #3b4a6b; color: #fff;
+  border: 1px solid #2c3750; border-radius: 6px;
+  padding: 7px; font-size: 13px; cursor: pointer;
+}
+.loot-split-launch button:hover { filter: brightness(1.15); }
+.loot-split-launch .ls-launch-split { flex: 3; }
+.loot-split-launch .ls-launch-clear { flex: 1; background: #6b3232; border-color: #4c2222; }
+
+/* Corner reopen button while a split is active and the window is closed */
+#loot-split-fab {
+  position: fixed; bottom: 12px; right: 318px; z-index: 60;
+  width: 36px; height: 36px;
+  background: #1d2129; border: 1px solid #e8c15a; border-radius: 8px;
+  color: #e8c15a; font-size: 16px; cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+}
+#loot-split-fab:hover { filter: brightness(1.25); }
+
+/* Narrow viewports: stack columns, single loot column */
+@media (max-width: 900px) {
+  .ls-body { flex-direction: column; overflow-y: auto; }
+  .ls-members { flex: none; width: 100%; max-height: none; overflow: visible; }
+  .ls-items { overflow: visible; }
+  .ls-items-grid { grid-template-columns: 1fr; }
+  .ls-gmcol { flex: none; width: 100%; max-height: none; overflow: visible; }
+  .ls-stats { grid-template-columns: repeat(2, 1fr); }
+}

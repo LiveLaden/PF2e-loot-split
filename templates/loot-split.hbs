@@ -1,0 +1,160 @@
+<div class="ls-root">
+  {{#if hasSession}}
+  <div class="ls-titlebar">
+    <span class="ls-title-icon"><i class="fas fa-scale-balanced"></i></span>
+    <span class="ls-title-text">Loot Split</span>
+    <div class="ls-menu-wrap">
+      <button type="button" class="ls-icon-btn ls-close" data-action="closeWin" title="Close"><i class="fas fa-xmark"></i></button>
+    </div>
+  </div>
+
+  <div class="ls-stats">
+    <div class="ls-stat"><label>Total loot</label><strong>{{totalDisplay}}</strong></div>
+    <div class="ls-stat"><label>Each gets</label><strong class="ls-share">{{shareDisplay}}</strong></div>
+    <div class="ls-stat"><label>Coin Pile</label><strong>{{coinsDisplay}}</strong></div>
+    <div class="ls-stat"><label>Items value</label><strong>{{itemsValueDisplay}}</strong></div>
+    <div class="ls-stat"><label>Value Left</label><strong>{{leftDisplay}}</strong></div>
+  </div>
+
+  <div class="ls-body">
+    <aside class="ls-members">
+      <h3><i class="fas fa-users"></i> Players</h3>
+      {{#each members}}
+      <div class="ls-member {{#if isMe}}ls-me{{/if}} {{#if excluded}}ls-excluded{{/if}}">
+        <span class="ls-portrait"><img src="{{img}}" alt="{{name}}"{{#if imgStyle}} style="{{imgStyle}}"{{/if}} /></span>
+        <div class="ls-member-info">
+          <span class="ls-member-name">{{name}}</span>
+          {{#if excluded}}
+          <span class="ls-member-claimed">Claimed {{claimedDisplay}}</span>
+          <span class="ls-excluded-tag">Sat out</span>
+          {{else}}
+          <span class="ls-member-claimed">Claimed {{claimedDisplay}}</span>
+          {{#if owes}}
+          <span class="ls-balance ls-owes"><i class="fas fa-triangle-exclamation"></i> Owes {{balanceDisplay}}</span>
+          {{else}}
+          <span class="ls-balance ls-left">Owed {{balanceDisplay}}</span>
+          {{/if}}
+          {{/if}}
+        </div>
+        {{#if ../isGM}}
+        <label class="ls-excl" title="Exclude from the split">
+          <input type="checkbox" data-action="exclude" data-member="{{actorUuid}}" {{#if excluded}}checked{{/if}} /><span class="ls-toggle"></span>
+        </label>
+        {{/if}}
+      </div>
+      {{/each}}
+      {{#if noMember}}
+      <p class="ls-warn"><i class="fas fa-triangle-exclamation"></i> {{localize "LOOT_SPLIT.NoCharacter"}}</p>
+      {{/if}}
+      {{#if isExcludedMe}}
+      <p class="ls-warn">You are sitting out of this split.</p>
+      {{/if}}
+    </aside>
+
+    <section class="ls-items">
+      <h3><i class="fas fa-box-open"></i> Loot <span class="ls-count">{{openCount}} remaining{{#if awardedCount}} · {{awardedCount}} awarded{{/if}}{{#if soldCount}} · {{soldCount}} sold{{/if}}</span></h3>
+      {{#if emptyLots}}
+        {{#if isGM}}
+        <p class="ls-warn">No splittable items in the stash — coin pile only. Use the GM panel to split coins.</p>
+        {{/if}}
+      {{/if}}
+      <div class="ls-items-grid">
+      <div class="ls-item ls-coin ls-fixed">
+        <span class="ls-coin-stack"><i class="fas fa-coins"></i></span>
+        <div class="ls-item-main">
+          <div class="ls-item-top">
+            <span class="ls-item-name">Coin Pile</span>
+          </div>
+          <div class="ls-denoms">
+            <span class="ls-denom d-gp"><i class="fas fa-circle"></i> {{coinDenoms.gp}} gp</span>
+            <span class="ls-denom d-sp"><i class="fas fa-circle"></i> {{coinDenoms.sp}} sp</span>
+            <span class="ls-denom d-cp"><i class="fas fa-circle"></i> {{coinDenoms.cp}} cp</span>
+            {{#if hasPlat}}<span class="ls-denom d-pp"><i class="fas fa-circle"></i> {{coinDenoms.pp}} pp</span>{{/if}}
+          </div>
+        </div>
+      </div>
+      {{#each items}}
+      <div class="ls-item {{status}}{{#if rarity}} r-{{rarity}}{{/if}}">
+        {{#if winnerImg}}<img class="ls-winner-bg" src="{{winnerImg}}" alt="" draggable="false" />{{/if}}
+        <img class="ls-item-img" src="{{img}}" alt="{{name}}" data-action="inspect" data-uuid="{{itemUuid}}" />
+        <div class="ls-item-main">
+          <div class="ls-item-top">
+            <span class="ls-item-name" data-action="inspect" data-uuid="{{itemUuid}}">{{name}}{{#if showQty}} <em>×{{qty}}</em>{{/if}}</span>
+            <span class="ls-item-value">{{valueDisplay}}</span>
+          </div>
+          <div class="ls-item-meta">
+            {{#if level}}<span>Lvl {{level}}</span>{{/if}}
+            {{#if rarity}}<span class="ls-rarity-tag">{{rarity}}</span>{{/if}}
+            {{#if location}}<span class="ls-loc"><i class="fas fa-box"></i> {{location}}</span>{{/if}}
+            {{#if isRolloff}}<span class="ls-rollbadge"><i class="fas fa-dice"></i> roll-off</span>{{/if}}
+          </div>
+          <div class="ls-claimants">
+            {{#if isAwarded}}
+            <span class="ls-winner"><i class="fas fa-trophy"></i> {{winnerName}}</span>
+            {{else}}
+            {{#if isSold}}
+            <span class="ls-sold-tag"><i class="fas fa-coins"></i> Sold {{soldDisplay}}</span>
+            {{else}}
+            {{#each claimants}}
+            <span class="ls-chip" title="{{name}}">
+              <span class="ls-clip"><img src="{{img}}" alt="{{name}}"{{#if imgStyle}} style="{{imgStyle}}"{{/if}} /></span>{{#if roll}}<strong>{{roll}}</strong>{{/if}}
+            </span>
+            {{else}}
+            <span class="ls-none">No claims yet</span>
+            {{/each}}
+            {{/if}}
+            {{/if}}
+          </div>
+          <div class="ls-item-actions">
+            {{#if isAwarded}}
+            <span class="ls-awarded-tag">Awarded</span>
+            {{else}}
+            {{#unless isSold}}
+            {{#if canClaim}}
+              {{#if iClaim}}
+              <button type="button" class="ls-btn ls-btn-ghost" data-action="claim" data-item="{{key}}"><i class="fas fa-xmark"></i> Withdraw</button>
+              {{else}}
+              <button type="button" class="ls-btn" data-action="claim" data-item="{{key}}"><i class="fas fa-hand-point-up"></i> I want this</button>
+              {{/if}}
+            {{/if}}
+            {{#if needsRoll}}
+            <button type="button" class="ls-btn ls-btn-roll" data-action="roll" data-item="{{key}}"><i class="fas fa-dice-d20"></i> Roll d100</button>
+            {{/if}}
+            {{#if ../isGM}}
+              {{#if isOpen}}
+                {{#if single}}<button type="button" class="ls-btn ls-btn-gm" data-action="award" data-item="{{key}}"><i class="fas fa-gavel"></i> Award</button>{{/if}}
+                {{#if contested}}<button type="button" class="ls-btn ls-btn-gm" data-action="rolloff" data-item="{{key}}"><i class="fas fa-dice"></i> Roll off</button>{{/if}}
+                <button type="button" class="ls-btn ls-btn-gm" data-action="sell" data-item="{{key}}" title="Sell for {{sellProceeds}}"><i class="fas fa-coins"></i> Sell</button>
+              {{/if}}
+              {{#if isRolloff}}
+              <button type="button" class="ls-btn ls-btn-gm" data-action="rollMissing" data-item="{{key}}" title="GM rolls for claimants who have not rolled"><i class="fas fa-dice-d20"></i> Roll missing</button>
+              {{/if}}
+            {{/if}}
+            {{/unless}}
+            {{/if}}
+          </div>
+        </div>
+      </div>
+      {{/each}}
+      </div>
+    </section>
+
+    {{#if isGM}}
+    <aside class="ls-gmcol">
+      <h3><i class="fas fa-wand-magic-sparkles"></i> Manage</h3>
+      <button type="button" class="ls-btn ls-btn-gm" data-action="awardUncontested"><i class="fas fa-check-double"></i> Award uncontested</button>
+      <button type="button" class="ls-btn ls-btn-gm" data-action="refresh"><i class="fas fa-rotate"></i> Refresh stash</button>
+      <button type="button" class="ls-btn ls-btn-gm" data-action="distCoins"><i class="fas fa-coins"></i> Split coins</button>
+      <button type="button" class="ls-btn ls-btn-gm" data-action="settle"><i class="fas fa-scale-unbalanced"></i> Settle debts</button>
+      <button type="button" class="ls-btn ls-btn-danger" data-action="end"><i class="fas fa-xmark"></i> End session</button>
+      <h3><i class="fas fa-scroll"></i> Activity</h3>
+      <div class="ls-log">
+        {{#each log}}<div class="ls-log-line">{{this}}</div>{{else}}<div class="ls-log-line ls-dim">Nothing yet.</div>{{/each}}
+      </div>
+    </aside>
+    {{/if}}
+  </div>
+  {{else}}
+  <p class="ls-warn">No active loot split.</p>
+  {{/if}}
+</div>
