@@ -1,7 +1,7 @@
 {
   "id": "loot-split",
   "title": "Loot Split",
-  "description": "Split party stash loot between PCs. GM opens a shared draft from the party sheet Stash tab: total value, equal shares, \"I want this\" claims, and d100 roll-offs for contested items.",
+  "description": "Split party loot fairly: claim stash items, roll off ties, share coins. Made for PF2e, with West Marches games in mind.",
   "version": "1.31.0",
   "compatibility": {
     "minimum": "14",

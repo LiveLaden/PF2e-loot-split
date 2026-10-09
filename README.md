@@ -4,6 +4,8 @@ Foundry VTT v14 + PF2e system module. Split the party stash fairly between playe
 
 See [CHANGELOG.md](CHANGELOG.md) for version history.
 
+*AI disclosure: developed with generative-AI assistance (code and documentation). Contains no AI-generated artwork.*
+
 ## Installation
 
 In Foundry Setup → Modules → Install Module, paste the manifest URL:
